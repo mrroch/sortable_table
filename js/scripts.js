@@ -20,12 +20,29 @@
 
   }
 
+
+  // usuwa klasy css
+  function clearClassName(nodeList) {
+
+    for (var i = 0; i < nodeList.length; i++) {
+
+      nodeList[i].className = "";
+    }
+
+  }
+
+
   function sortBy(e) {
 
     var target = e.target,
       thsArr = makeArray(ths),
       trsArr = makeArray(trs),
-      index = thsArr.indexOf(target);
+      index = thsArr.indexOf(target),
+      df = document.createDocumentFragment(),
+      order = (target.className === "" || target.className === "desc") ? "asc" : "desc";
+
+    clearClassName(ths);
+
 
     trsArr.sort(function (a, b) {
 
@@ -33,18 +50,26 @@
         tdB = b.children[index].textContent;
 
       if (tdA < tdB) {
-        return 1;
+        return order === "asc" ? -1 : 1;
       } else if (tdA > tdB) {
-        return -1;
+        return order === "asc" ? 1 : -1;
       } else {
         return 0;
       }
 
     });
 
-    console.log(trsArr);
+    trsArr.forEach(function (tr) {
 
-  }
+      df.appendChild(tr);
+    });
+
+    // dodaje dokument fragment do tbody
+    target.className = order;
+    table.querySelector("tbody").appendChild(df);
+
+
+  };
 
   for (var i = 0; i < ths.length; i++) {
 
